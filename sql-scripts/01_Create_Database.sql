@@ -1,1 +1,2 @@
-
+CREATE DATABASE DW_Ventes_AW;
+GO
