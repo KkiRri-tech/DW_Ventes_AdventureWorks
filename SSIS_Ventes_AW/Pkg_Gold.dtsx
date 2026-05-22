@@ -1,0 +1,428 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="5/22/2026 7:05:17 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="KKIRRI"
+  DTS:CreatorName="KKIRRI\MVpro"
+  DTS:DTSID="{4A76C318-1619-4AA0-9358-79BAC88C6CD8}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1036"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="1"
+  DTS:VersionGUID="{40BC2FC3-4811-4569-809C-EC18D230E832}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.DW_Ventes_AW]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{032818B1-6F51-4BCD-B31A-9B0AB6343B96}"
+      DTS:ObjectName="localhost.DW_Ventes_AW">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=DW_Ventes_AW;Provider=MSOLEDBSQL19.1;Integrated Security=SSPI;Trust Server Certificate=True;Application Name=SSIS-Package1-{032818B1-6F51-4BCD-B31A-9B0AB6343B96}localhost.DW_Ventes_AW;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Insert Unknown SalesPerson"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tâche d'exécution de requêtes SQL"
+      DTS:DTSID="{65438991-71a5-44d1-9239-e97f59eba5fa}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Insert Unknown SalesPerson"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{032818B1-6F51-4BCD-B31A-9B0AB6343B96}"
+          SQLTask:SqlStatementSource="SET IDENTITY_INSERT Gold.DimSalesPerson ON;&#xA;INSERT INTO Gold.DimSalesPerson (SalesPersonKey, SalesPersonID, FullName, TerritoryID, SalesQuota, CommissionPct)&#xA;VALUES (-1, -1, 'Online / No Salesperson', NULL, NULL, 0);&#xA;SET IDENTITY_INSERT Gold.DimSalesPerson OFF;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load DimCustomer"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tâche d'exécution de requêtes SQL"
+      DTS:DTSID="{3a96d28b-8059-4f51-a695-3bb580d19974}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load DimCustomer"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{032818B1-6F51-4BCD-B31A-9B0AB6343B96}"
+          SQLTask:SqlStatementSource="INSERT INTO Gold.DimCustomer (CustomerID, CustomerType, FullName, TerritoryID, StartDate, IsCurrent)&#xA;SELECT CustomerID, CustomerType, FullName, TerritoryID, GETDATE(), 1&#xA;FROM Silver.Customer;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load DimProduct"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tâche d'exécution de requêtes SQL"
+      DTS:DTSID="{569c3774-257f-4b72-acf3-c9da1e175167}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load DimProduct"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{032818B1-6F51-4BCD-B31A-9B0AB6343B96}"
+          SQLTask:SqlStatementSource="INSERT INTO Gold.DimProduct (ProductID, ProductName, Color, ProductLine,&#xA;                             SubcategoryName, CategoryName, StandardCost,&#xA;                             ListPrice, IsDiscontinued, StartDate, IsCurrent)&#xA;SELECT ProductID, ProductName, Color, ProductLine,&#xA;       SubcategoryName, CategoryName, StandardCost,&#xA;       ListPrice, IsDiscontinued, GETDATE(), 1&#xA;FROM Silver.Product;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load DimSalesPerson"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tâche d'exécution de requêtes SQL"
+      DTS:DTSID="{a2afcee7-da39-47b6-ab12-e44d805271a0}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load DimSalesPerson"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{032818B1-6F51-4BCD-B31A-9B0AB6343B96}"
+          SQLTask:SqlStatementSource="INSERT INTO Gold.DimSalesPerson (SalesPersonID, FullName, TerritoryID, SalesQuota, CommissionPct)&#xA;SELECT SalesPersonID, FullName, TerritoryID, SalesQuota, CommissionPct&#xA;FROM Silver.SalesPerson;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load DimTerritory"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tâche d'exécution de requêtes SQL"
+      DTS:DTSID="{f105e02e-5ae3-4353-8fe7-aafd5e0a4a2d}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load DimTerritory"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{032818B1-6F51-4BCD-B31A-9B0AB6343B96}"
+          SQLTask:SqlStatementSource="INSERT INTO Gold.DimTerritory (TerritoryID, TerritoryName, CountryCode, Region)&#xA;SELECT TerritoryID, TerritoryName, CountryCode, Region&#xA;FROM Silver.Territory;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load FactSales"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tâche d'exécution de requêtes SQL"
+      DTS:DTSID="{143c8983-d2f5-49a6-b1aa-f2a63af6a274}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load FactSales"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{032818B1-6F51-4BCD-B31A-9B0AB6343B96}"
+          SQLTask:SqlStatementSource="INSERT INTO Gold.FactSales (&#xA;    DateKey, CustomerKey, ProductKey, TerritoryKey, SalesPersonKey,&#xA;    SalesOrderID, SalesOrderDetailID,&#xA;    OrderQty, UnitPrice, UnitPriceDiscount, LineTotal, StandardCost, IsOnlineOrder&#xA;)&#xA;SELECT&#xA;    CAST(CONVERT(NVARCHAR, h.OrderDate, 112) AS INT),&#xA;    dc.CustomerKey,&#xA;    dp.ProductKey,&#xA;    dt.TerritoryKey,&#xA;    ISNULL(dsp.SalesPersonKey, -1),&#xA;    h.SalesOrderID,&#xA;    d.SalesOrderDetailID,&#xA;    d.OrderQty,&#xA;    d.UnitPrice,&#xA;    d.UnitPriceDiscount,&#xA;    d.LineTotal,&#xA;    p.StandardCost,&#xA;    h.IsOnlineOrder&#xA;FROM Silver.SalesOrderDetail d&#xA;JOIN Silver.SalesOrderHeader  h   ON h.SalesOrderID    = d.SalesOrderID&#xA;JOIN Gold.DimCustomer         dc  ON dc.CustomerID     = h.CustomerID    AND dc.IsCurrent = 1&#xA;JOIN Gold.DimProduct          dp  ON dp.ProductID      = d.ProductID     AND dp.IsCurrent = 1&#xA;JOIN Gold.DimTerritory        dt  ON dt.TerritoryID    = h.TerritoryID&#xA;LEFT JOIN Gold.DimSalesPerson dsp ON dsp.SalesPersonID = h.SalesPersonID&#xA;JOIN Silver.Product           p   ON p.ProductID       = d.ProductID;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Truncate Gold"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Tâche d'exécution de requêtes SQL"
+      DTS:DTSID="{92645CF9-8420-43DF-B47F-67DCC4B7B7C1}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Truncate Gold"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{032818B1-6F51-4BCD-B31A-9B0AB6343B96}"
+          SQLTask:SqlStatementSource="DELETE FROM Gold.FactSales;&#xA;DELETE FROM Gold.DimCustomer;&#xA;DELETE FROM Gold.DimProduct;&#xA;DELETE FROM Gold.DimTerritory;&#xA;DELETE FROM Gold.DimSalesPerson;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Contrainte]"
+      DTS:CreationName=""
+      DTS:DTSID="{835B1D3F-6722-4C08-9212-DD9239D05D86}"
+      DTS:From="Package\Truncate Gold"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Contrainte"
+      DTS:To="Package\Insert Unknown SalesPerson" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Contrainte 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{984169B1-9B2E-409C-BD0E-1001CE9368B7}"
+      DTS:From="Package\Insert Unknown SalesPerson"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Contrainte 1"
+      DTS:To="Package\Load DimTerritory" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Contrainte 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{8ADDDC1D-7519-4B9D-8006-A29FEE5B45AD}"
+      DTS:From="Package\Load DimTerritory"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Contrainte 2"
+      DTS:To="Package\Load DimCustomer" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Contrainte 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{F5B74033-6DA3-492D-998A-DADEC5EB4B0B}"
+      DTS:From="Package\Load DimCustomer"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Contrainte 3"
+      DTS:To="Package\Load DimProduct" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Contrainte 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{37104B06-20DB-43C2-A159-45301415091F}"
+      DTS:From="Package\Load DimProduct"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Contrainte 4"
+      DTS:To="Package\Load DimSalesPerson" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Contrainte 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{8DCB1975-BA96-4705-83E0-74571FD02865}"
+      DTS:From="Package\Load DimSalesPerson"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Contrainte 5"
+      DTS:To="Package\Load FactSales" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--Cette section CDATA contient des informations sur la disposition du package. Elle comprend des informations telles que les coordonnées (x,y), la largeur et la hauteur.-->
+<!--Si vous modifiez manuellement cette section et commettez une erreur, vous pouvez la supprimer. -->
+<!--Le package pourra toujours se charger normalement, mais les informations de disposition précédente seront perdues et le concepteur réorganisera automatiquement les éléments sur l'aire de conception.-->
+<Objects
+  Version="8">
+  <!--Chaque nœud ci-dessous contiendra des propriétés qui n'affectent pas le comportement d'exécution.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="144,41.6"
+          Id="Package\Truncate Gold"
+          TopLeft="239.999986886979,78.8666661182377" />
+        <NodeLayout
+          Size="212,41.6"
+          Id="Package\Insert Unknown SalesPerson"
+          TopLeft="239.999986886979,180.466666118238" />
+        <NodeLayout
+          Size="161.6,41.6"
+          Id="Package\Load DimTerritory"
+          TopLeft="239.999986886979,282.066666118238" />
+        <NodeLayout
+          Size="168,41.6"
+          Id="Package\Load DimCustomer"
+          TopLeft="239.999986886979,383.666666118238" />
+        <NodeLayout
+          Size="158.4,41.6"
+          Id="Package\Load DimProduct"
+          TopLeft="239.999986886979,485.266666118238" />
+        <NodeLayout
+          Size="181.6,41.6"
+          Id="Package\Load DimSalesPerson"
+          TopLeft="239.999986886979,586.866666118238" />
+        <NodeLayout
+          Size="150.4,41.6"
+          Id="Package\Load FactSales"
+          TopLeft="239.999986886979,688.466666118238" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Contrainte]"
+          TopLeft="311.999986886979,120.466666118238">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="34,60"
+              Start="0,0"
+              End="34,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="4,30" />
+                  <mssgle:LineSegment
+                    End="30,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="30,30"
+                    Point2="34,30"
+                    Point3="34,34" />
+                  <mssgle:LineSegment
+                    End="34,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Contrainte 1]"
+          TopLeft="345.999986886979,222.066666118238">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-25.2,60"
+              Start="0,0"
+              End="-25.2,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="-4,30" />
+                  <mssgle:LineSegment
+                    End="-21.2,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-21.2,30"
+                    Point2="-25.2,30"
+                    Point3="-25.2,34" />
+                  <mssgle:LineSegment
+                    End="-25.2,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Contrainte 2]"
+          TopLeft="322.399986886979,323.666666118238">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Contrainte 3]"
+          TopLeft="321.599986886979,425.266666118238">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Contrainte 4]"
+          TopLeft="319.199986886979,526.866666118238">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="11.6,60"
+              Start="0,0"
+              End="11.6,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="4,30" />
+                  <mssgle:LineSegment
+                    End="7.60000000000002,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="7.60000000000002,30"
+                    Point2="11.6,30"
+                    Point3="11.6,34" />
+                  <mssgle:LineSegment
+                    End="11.6,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Contrainte 5]"
+          TopLeft="330.799986886979,628.466666118238">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-15.6,60"
+              Start="0,0"
+              End="-15.6,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="-4,30" />
+                  <mssgle:LineSegment
+                    End="-11.6,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-11.6,30"
+                    Point2="-15.6,30"
+                    Point3="-15.6,34" />
+                  <mssgle:LineSegment
+                    End="-15.6,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
